@@ -1,4 +1,4 @@
-import server from './config/serverConfig.js'
+import server from '../config/serverConfig.js'
 import { Client, ID, Databases, Storage, Query } from "appwrite"
 
 export class DatabasesServices {
@@ -26,7 +26,6 @@ export class DatabasesServices {
                     featuredImage,
                     status,
                     userId
-
                 }, // data
 
             )
@@ -47,7 +46,6 @@ export class DatabasesServices {
                     content,
                     featuredImage,
                     status,
-
                 }, // data
 
             )
@@ -132,3 +130,7 @@ export class DatabasesServices {
     }
 
 }
+
+const postServices = new DatabasesServices();
+
+export default  postServices

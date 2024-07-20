@@ -1,4 +1,4 @@
-import server from './config/serverConfig.js'
+import server from '../config/serverConfig.js'
 import { Client, Account, ID } from "appwrite"
 
 export class AuthService {
@@ -10,6 +10,8 @@ export class AuthService {
             .setProject(server.projectId);
         this.account = new Account(this.client)
     }
+
+    
 
     async createAccountApi({emial, password, name}){
         try {
@@ -40,7 +42,6 @@ export class AuthService {
         try {
             return await this.account.get()
         } catch (error) {
-            console.log(error);
             throw error
         }
         return null
