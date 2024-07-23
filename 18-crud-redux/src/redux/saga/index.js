@@ -1,0 +1,87 @@
+import { all, call, put, takeLatest } from "redux-saga/effects";
+import axios from "axios"
+import {
+    fetchUserStart,
+    fetchUserSuccess,
+    fetchUserFailure,
+    createUserStart,
+    createUserSuccess,
+    createUserFailure,
+    updateUserStart,
+    updateUserSuccess,
+    updateUserFailure,
+    deleteUserStart,
+    deleteUserSuccess,
+    deleteUserFailure,
+} from '../crudSlice/crudSlice';
+
+const API_URL = 'https://theroundrectangle.com/Deepak/contactform/olivrweb/user/UserApi.php';
+
+function* fetchUser() {
+    try {
+        const response = yield call(axios.post, `${API_URL}/getUsers`)
+        yield put(fetchUserSuccess(response.data))
+    } catch (error) {
+        yield put(fetchUserFailure(error.message))
+    }
+}
+
+function* createUser(action) {
+    try {
+        const formData = new FormData();
+        formData.append('name', action.payload.name);
+        formData.append('email', action.payload.email);
+        formData.append('mobile', action.payload.mobile);
+        const response = yield call(axios.post, `${API_URL}/setUser`, formData)
+        yield put(createUserSuccess(response.data));
+    } catch (error) {
+        yield put(createUserFailure(error.message))
+    }
+}
+
+function* updateUser(action) {
+    try {
+        const response = yield call(axios.put, `${API_URL}/${action.payload}`, action.payload);
+        yield put(updateUserSuccess(response.data));
+    } catch (error) {
+        yield put(updateUserFailure(error.message))
+    }
+}
+
+function* deleteUser(action) {
+    try {
+        const formData = new FormData();
+        formData.append('id', action.payload);
+        const response = yield call(axios.post, `${API_URL}/deleteUser`, formData)
+       if(response.data.status == true){
+        yield put(deleteUserSuccess(action.payload))
+       }
+    } catch (error) {
+        yield put(deleteUserFailure(error.message))
+    }
+}
+
+function* watchFetchUser(){
+    yield takeLatest(fetchUserStart.type, fetchUser)
+}
+
+function* watchCreateUser(){
+    yield takeLatest(createUserStart.type, createUser)
+}
+
+function* watchUpdateUser(){
+    yield takeLatest(updateUserStart.type, updateUser)
+}
+
+function* watchDeleteUser(){
+    yield takeLatest(deleteUserStart.type, deleteUser)
+}
+
+export default function* rootSaga(){
+    yield all([
+        watchFetchUser(),
+        watchCreateUser(),
+        watchUpdateUser(),
+        watchDeleteUser()
+    ])
+}

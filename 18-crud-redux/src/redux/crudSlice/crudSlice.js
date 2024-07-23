@@ -17,7 +17,7 @@ const userSlice = createSlice({
         },
         fetchUserSuccess(state, action){
             state.loading = false;
-            state.users= action.payload
+            state.users= action.payload.user
         },
         fetchUserFailure(state, action){
             state.loading = false;
@@ -30,7 +30,7 @@ const userSlice = createSlice({
         },
         createUserSuccess(state, action){
             state.loading = false;
-            state.users.push(action.payload)
+            state.users.push(action.payload);
         },
         createUserFailure(state, action){
             state.loading = false;
@@ -58,15 +58,14 @@ const userSlice = createSlice({
             state.loading = true
         },
         deleteUserSuccess(state, action){
+            console.log(action.payload)
             state.loading = false;
-            state.users = state.users.filter(user => user.id !== action.payload.id)
-           
+            state.users = state.users.filter(user => user.id !== action.payload)
         },
         deleteUserFailure(state, action){
             state.loading = false;
             state.error = action.payload
         },
-
     }
 })
 export const {
@@ -82,6 +81,7 @@ export const {
     deleteUserStart,
     deleteUserSuccess,
     deleteUserFailure,
+    getUserSuccess,
 } = userSlice.actions;
 
 export default userSlice.reducer
