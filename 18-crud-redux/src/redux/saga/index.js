@@ -15,12 +15,15 @@ import {
     deleteUserFailure,
 } from '../crudSlice/crudSlice';
 
-const API_URL = 'https://theroundrectangle.com/Deepak/contactform/olivrweb/user/UserApi.php';
+const API_URL = String(import.meta.env.VITE_API_URL)
+console.log(API_URL)
 
 function* fetchUser() {
     try {
         const response = yield call(axios.post, `${API_URL}/getUsers`)
-        yield put(fetchUserSuccess(response.data))
+        if(response.data.status == true){
+            yield put(fetchUserSuccess(response.data))
+        }
     } catch (error) {
         yield put(fetchUserFailure(error.message))
     }
@@ -33,7 +36,10 @@ function* createUser(action) {
         formData.append('email', action.payload.email);
         formData.append('mobile', action.payload.mobile);
         const response = yield call(axios.post, `${API_URL}/setUser`, formData)
-        yield put(createUserSuccess(response.data));
+        if(response.data.status == true){
+            yield put(createUserSuccess(response.data));
+        }
+        
     } catch (error) {
         yield put(createUserFailure(error.message))
     }
@@ -41,8 +47,17 @@ function* createUser(action) {
 
 function* updateUser(action) {
     try {
-        const response = yield call(axios.put, `${API_URL}/${action.payload}`, action.payload);
-        yield put(updateUserSuccess(response.data));
+        console.log(action.payload.userId)
+        const formData = new FormData();
+        formData.append('id', action.payload.userId);
+        formData.append('name', action.payload.name);
+        formData.append('email', action.payload.email);
+        formData.append('mobile', action.payload.mobile);
+        const response = yield call(axios.post, `${API_URL}/updateUser`, formData);
+        if(response.data.status == true){
+            yield put(updateUserSuccess(response.data));
+        }
+        
     } catch (error) {
         yield put(updateUserFailure(error.message))
     }

@@ -8,6 +8,7 @@ function App() {
       <Route path='' >
         <Route path='' element={<Create />} />
         <Route path='/add-user' element={<Create />} />
+        <Route path='/add-user/:userId' element={<Create />} />
         <Route path='/user-list' element={<List />} />
       </Route>
     )

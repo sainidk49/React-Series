@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserStart, deleteUserStart, getUserSuccess } from '../../redux/crudSlice/crudSlice';
+import { useNavigate } from "react-router-dom"
+import { fetchUserStart, deleteUserStart} from '../../redux/crudSlice/crudSlice';
 
 const List = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { users, loading, error } = useSelector((state) => state.usersRed);
 
@@ -15,7 +17,9 @@ const List = () => {
 
   return (
     <div className="table-container">
-      {/* <CreateItem /> */}
+      <button className="update" onClick={() => navigate(`../add-user/`)}>Add New User</button>
+      <br />
+      <br />
       <table>
         <thead>
           <tr>
@@ -29,19 +33,18 @@ const List = () => {
         <tbody>
           {users && users.map((user, index) => {
             return (
-                    <tr key={index}>
-                      <td>{user.id}</td>
-                      <td>{user.name}</td>
-                      <td>{user.email}</td>
-                      <td>{user.mobile}</td>
-                      <td>
-                        <button className="update" onClick={() => dispatch(getUserSuccess(user.id))}>Update</button>
-                        <button className="delete" onClick={() => dispatch(deleteUserStart(user.id))}>Delete</button>
-                      </td>
-                    </tr>
-                  )
-            }
-          )}
+              <tr key={index}>
+                <td>{user.id}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.mobile}</td>
+                <td>
+                  <button className="update" onClick={() => navigate(`../add-user/${user.id}`)}>Update</button>
+                  <button className="delete" onClick={() => dispatch(deleteUserStart(user.id))}>Delete</button>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>
