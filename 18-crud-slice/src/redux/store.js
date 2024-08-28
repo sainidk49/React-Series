@@ -5,7 +5,6 @@ import createSagaMiddleware from "redux-saga"
 
 
 const sagaMiddleware = createSagaMiddleware();
-
 const store = configureStore({
     reducer:{
         usersRed: userReducer

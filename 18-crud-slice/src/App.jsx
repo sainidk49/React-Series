@@ -5,7 +5,7 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path='' >
+      <Route >
         <Route path='' element={<Create />} />
         <Route path='/add-user' element={<Create />} />
         <Route path='/add-user/:userId' element={<Create />} />

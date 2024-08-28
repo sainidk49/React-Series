@@ -1,23 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom"
-import { fetchUserStart, deleteUserStart} from '../../redux/crudSlice/crudSlice';
+import { fetchUserStart, deleteUserStart } from '../../redux/crudSlice/crudSlice';
 
 const List = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch();
-  const { users, loading, error } = useSelector((state) => state.usersRed);
+  const { users, loading, status, message } = useSelector((state) => state.usersRed);
+  
+  const addNewUser = () => {
+    navigate(`../add-user/`, { state: { status: null } })
+  }
+  const deleteUser = (userId) => {
+    dispatch(deleteUserStart(userId))
+  }
 
   useEffect(() => {
     dispatch(fetchUserStart());
   }, [users.length]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>Loading...</div>
+  if (status === false) return <div>
+    <button className="update" onClick={addNewUser}>Add New User</button>
+    <h3>Error: {message}</h3>
+  </div>
 
   return (
     <div className="table-container">
-      <button className="update" onClick={() => navigate(`../add-user/`)}>Add New User</button>
+      <button className="update" onClick={addNewUser}>Add New User</button>
       <br />
       <br />
       <table>
@@ -39,8 +49,8 @@ const List = () => {
                 <td>{user.email}</td>
                 <td>{user.mobile}</td>
                 <td>
-                  <button className="update" onClick={() => navigate(`../add-user/${user.id}`)}>Update</button>
-                  <button className="delete" onClick={() => dispatch(deleteUserStart(user.id))}>Delete</button>
+                  <button className="update" onClick={() => navigate(`../add-user/${user.id}`,{ state: { status: null }})}>Update</button>
+                  <button className="delete" onClick={()=>deleteUser(user.id)}>Delete</button>
                 </td>
               </tr>
             )

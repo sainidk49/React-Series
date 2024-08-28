@@ -2,35 +2,50 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createUserStart, updateUserStart } from '../../redux/crudSlice/crudSlice';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 const Create = () => {
   const { userId } = useParams("")
+  const [isData, setIsData] = useState(false)
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [isUpdate, setIsUpdate] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const { loading, error } = useSelector((state) => state.usersRed);
-  const { users } = useSelector((state) => state.usersRed);
+  let { status, message, users } = useSelector((state) => state.usersRed);
+  const location = useLocation()
+  if(location.state){
+    status = location.state.status
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(isUpdate){
+    if (isUpdate) {
       dispatch(updateUserStart({ userId, name, email, mobile }));
     }
-    else{
+    else {
       dispatch(createUserStart({ name, email, mobile }));
     }
-    
-    setName('');
-    setEmail('');
-    setMobile('');
-    if (!loading && !error) {
-      navigate("/user-list")
-    }
+    setTimeout(() => {
+      setIsData(isData => !isData)
+    }, 100);
   };
+
+  useEffect(() => {
+    console.log("status :: " + status)
+    if (status === true) {
+      setName('');
+      setEmail('');
+      setMobile('');
+      navigate(`/user-list/`)
+    }
+    else if (status === false) {
+      alert(message)
+      console.log(status, message)
+    }
+    location.state = null
+  }, [isData])
 
   useEffect(() => {
     if (userId) {
@@ -44,7 +59,6 @@ const Create = () => {
       })
     }
   }, [userId])
-
 
   return (
     <>
