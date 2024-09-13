@@ -1,7 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 
+const API_URL = String(import.meta.env.VITE_API_URL)
+
 export const fetchUsers = createAsyncThunk("fetchUsers", async () => {
-    const response = await fetch("https://theroundrectangle.com/Deepak/contactform/olivrweb/user/UserApi.php/getUsers", {
+    const response = await fetch(`${API_URL}/getUsers`, {
         method: "POST"
     })
     const result = await response.json()

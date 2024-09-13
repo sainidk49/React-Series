@@ -1,11 +1,10 @@
 
-let BaseAPIUrl = "https://theroundrectangle.com/Deepak/contactform/olivrweb/user/UserApi.php/"
-
+const API_URL = String(import.meta.env.VITE_API_URL)
 ///////////// fetch users API ////////////////
 export async function fetchUsersApi() {
   try {
     const response = await fetch(
-      `${BaseAPIUrl}/getUsers`,
+      `${API_URL}/getUsers`,
       {
         method: "POST",
       }
@@ -25,7 +24,7 @@ export async function addUserApi({ name, email, mobile }) {
   formData.append('email', email);
   formData.append('mobile', mobile);
   try {
-    const response = await fetch(`${BaseAPIUrl}/setUser`, {
+    const response = await fetch(`${API_URL}/setUser`, {
       method: 'POST',
       body: formData,
     });
@@ -47,7 +46,7 @@ export async function updateUserApi({ userId, name, email, mobile }) {
   formData.append('email', email);
   formData.append('mobile', mobile);
   try {
-    const response = await fetch(`${BaseAPIUrl}/updateUser`, {
+    const response = await fetch(`${API_URL}/updateUser`, {
       method: 'POST',
       body: formData,
     });
@@ -67,7 +66,7 @@ export async function deleteUserApi(id){
   let formData = new FormData()
   formData.append("id", id)
   try {
-    let response = await fetch(`${BaseAPIUrl}/deleteUser`, {
+    let response = await fetch(`${API_URL}/deleteUser`, {
       method: 'POST',
       body: formData
     })
