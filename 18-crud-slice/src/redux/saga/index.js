@@ -19,8 +19,9 @@ const API_URL = String(import.meta.env.VITE_API_URL)
 
 function* fetchUser() {
     try {
-        const response = yield call(axios.post, `${API_URL}/getUsers`)
+        const response = yield call(axios.post, `${API_URL}/users`)
         if (response.data.status == true) {
+            console.log(response.data)
             yield put(fetchUserSuccess(response.data))
         }
         else {
@@ -37,7 +38,14 @@ function* createUser(action) {
         formData.append('name', action.payload.name);
         formData.append('email', action.payload.email);
         formData.append('mobile', action.payload.mobile);
-        const response = yield call(axios.post, `${API_URL}/setUser`, formData)
+        
+        const userJson = {
+            name: action.payload.name,
+            email: action.payload.email,
+            mobile: action.payload.mobile
+        };
+        const response = yield call(axios.post, `${API_URL}/create`, userJson)
+        console.log("response ::", response)
         if (response.data.status == true) {
             yield put(createUserSuccess(response.data))
         }
@@ -45,6 +53,7 @@ function* createUser(action) {
             yield put(createUserFailure(response.data))
         }
     } catch (error) {
+        console.log(error)
         yield put(createUserFailure({ status: false, message: error.message }))
     }
 }

@@ -18,7 +18,7 @@ const userSlice = createSlice({
         },
         fetchUserSuccess(state, action){
             state.loading = false;
-            state.users= action.payload.user
+            state.users= action.payload.data
             state.status = action.payload.status
             state.message = action.payload.message
         },
@@ -80,6 +80,12 @@ const userSlice = createSlice({
             state.status = action.payload.status
             state.message = action.payload.message
         },
+
+        ////////// update user 
+        clearMessageStatus(state){
+            state.status = null
+            state.message = ""
+        },
     }
 })
 export const {
@@ -96,6 +102,9 @@ export const {
     deleteUserSuccess,
     deleteUserFailure,
     getUserSuccess,
+
+    ////// clear message status ////////
+    clearMessageStatus
 } = userSlice.actions;
 
 export default userSlice.reducer
