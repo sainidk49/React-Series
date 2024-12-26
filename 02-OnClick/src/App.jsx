@@ -4,7 +4,7 @@ import './App.css'
 function App() {
   const [count, setCount] = useState(0)
   function IncreaseValue(){
-    setCount((count) => count + 1)
+    setCount((count) => count + 1);
   }
   return (
     <>
