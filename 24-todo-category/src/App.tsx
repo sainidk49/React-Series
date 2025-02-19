@@ -47,7 +47,7 @@ function App(): ReactElement {
 
   return (
     <>
-      <FormElement taskHandler={taskHandler} editData= {}/>
+      <FormElement taskHandler={taskHandler}/>
       <br></br>
       <div style={{ display: 'flex', justifyContent: "space-around", textAlign: "center", width: "500px" }}>
         {categories?.map((category: string, index: number) => (
