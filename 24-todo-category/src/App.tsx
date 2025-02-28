@@ -1,7 +1,8 @@
-import React, { ReactElement, ReactNode, useState } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { nanoid } from 'nanoid'
 
 function App(): ReactElement {
+  const [editableTask, setEditableTask] = useState(null)
   const [tasks, setTasks] = useState<TaskList>({
     todo: [
       {
@@ -13,14 +14,14 @@ function App(): ReactElement {
     process: [
       {
         id: nanoid(),
-        title: 'task1',
+        title: 'task2',
         category: 'process',
       },
     ],
     completed: [
       {
         id: nanoid(),
-        title: 'task1',
+        title: 'task3',
         category: 'completed',
       },
     ],
@@ -31,23 +32,30 @@ function App(): ReactElement {
   }, [tasks])
 
   const taskHandler = (payload: Task) => {
+    if (editableTask) {
+      const filterTask = tasks[editableTask.category].filter(task => task.id !== editableTask.id)
+      setTasks(prev => ({...prev, [editableTask.category]: filterTask}))
+      setEditableTask(null)
+      
+    }
     setTasks(prev => ({ ...prev, [payload.category]: [...prev[payload.category], payload] }))
   }
 
+  let editableData: any
   const taskIdHandler = (id: string) => {
-    let editableData
     for (const key in tasks) {
       editableData = tasks[key].find(task => task.id === id);
-      if(editableData){
+      if (editableData) {
         break
       }
     }
-    console.log(editableData)
+    setEditableTask(editableData)
+
   }
 
   return (
     <>
-      <FormElement taskHandler={taskHandler}/>
+      <FormElement taskHandler={taskHandler} editHandler={editableTask} />
       <br></br>
       <div style={{ display: 'flex', justifyContent: "space-around", textAlign: "center", width: "500px" }}>
         {categories?.map((category: string, index: number) => (
@@ -66,9 +74,10 @@ function App(): ReactElement {
 export default App
 
 
-function FormElement({ taskHandler }: any): ReactElement {
+function FormElement({ taskHandler, editHandler }: any): ReactElement {
   const [titleValue, setTitleValue] = useState<string>("");
   const [selectedOption, setSelectedOption] = useState<string>("todo");
+  const [isUpdate, setIsUpdate] = useState(false)
 
   const options = [
     { label: "Todo", value: "todo" },
@@ -84,8 +93,23 @@ function FormElement({ taskHandler }: any): ReactElement {
       category: selectedOption || 'todo',
     }
     taskHandler(payload)
+    setTitleValue('')
+    setSelectedOption("todo")
   };
 
+
+  useEffect(() => {
+    if (editHandler) {
+      setTitleValue(editHandler.title)
+      setSelectedOption(editHandler.category)
+      setIsUpdate(true)
+    }
+    else {
+      setTitleValue('')
+      setSelectedOption("todo")
+      setIsUpdate(false)
+    }
+  }, [editHandler])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -101,11 +125,10 @@ function FormElement({ taskHandler }: any): ReactElement {
           </option>
         ))}
       </select>
-      <button type="submit">add</button>
+      <button type="submit">{isUpdate ? "update" : "add"}</button>
     </form>
   );
 }
-
 
 
 function TaskList({ name, children }: { name: string, children: ReactNode }): ReactElement {
