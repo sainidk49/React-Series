@@ -9,7 +9,7 @@ const App = () => {
   return (
     <div className='main-container'>
       <h1>{getValue}</h1>
-      <button onClick={() => setValue(prev => prev + 0)}>Increment</button>
+      <button onClick={() => setValue(prev => prev + 1)}>Increment</button>
     </div>
   );
 };
